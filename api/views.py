@@ -24,12 +24,6 @@ class BlogPostRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
 class BlogPostList(APIView):
     def get(self, request, format=None):
         title = request.query_params.get("title", "")
-
-        if title:
-            blog_posts = BlogPost.objects.filter(title__icontains=title)
-        else:
-            blog_posts = BlogPost.objects.all()
-
+        blog_posts = BlogPost.objects.filter(title__icontains=title) if title else BlogPost.objects.all()
         serializer = BlogPostSerializer(blog_posts, many=True)
-
         return Response(serializer.data, status=status.HTTP_200_OK)
